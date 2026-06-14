@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
 
 // Public Landing Page
 $routes->get('/', 'Landing::index');
+$routes->get('uploads/(:segment)/(:any)', 'Uploads::show/$1/$2');
 $routes->get('course/(:any)', 'Landing\\CourseDetail::index/$1');
 $routes->get('artikel', 'Landing\\Articles::index');
 $routes->get('artikel/(:any)', 'Landing\\ArticleDetail::index/$1');

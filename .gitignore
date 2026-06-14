@@ -11,3 +11,4 @@ public/uploads/*
 *.swp
 *.swo
 docker-compose.override.yml
+session-ses_*

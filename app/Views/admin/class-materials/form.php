@@ -54,7 +54,7 @@
                         <?php if (!empty($material->file_path)): ?>
                             <div class="mt-2 p-2 bg-light rounded">
                                 <i class="fas fa-file"></i> File saat ini: <strong><?= esc($material->file_path) ?></strong>
-                                <a href="/uploads/materials/<?= esc($material->file_path) ?>" target="_blank" class="ml-2"><i class="fas fa-eye"></i> Lihat</a>
+                                <a href="/admin/classes/materials/download/<?= $class->id ?>/<?= $material->id ?>" class="ml-2"><i class="fas fa-download"></i> Download</a>
                             </div>
                         <?php endif; ?>
                     </div>
