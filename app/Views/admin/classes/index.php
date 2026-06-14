@@ -52,6 +52,7 @@
                                     <span class="badge badge-<?= $color ?>"><?= ucfirst($cls->status) ?></span>
                                 </td>
                                 <td>
+                                    <a href="/admin/classes/view/<?= $cls->id ?>" class="btn btn-info btn-sm" title="Lihat Detail"><i class="fas fa-eye"></i></a>
                                     <a href="/admin/classes/edit/<?= $cls->id ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                                     <button onclick="confirmDelete('/admin/classes/delete/<?= $cls->id ?>')" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                 </td>

@@ -63,9 +63,13 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->get('classes', 'Admin\Classes::index');
     $routes->get('classes/create', 'Admin\Classes::create');
     $routes->post('classes/store', 'Admin\Classes::store');
+    $routes->get('classes/view/(:num)', 'Admin\ClassDetail::index/$1');
     $routes->get('classes/edit/(:num)', 'Admin\Classes::edit/$1');
     $routes->post('classes/update/(:num)', 'Admin\Classes::update/$1');
     $routes->get('classes/delete/(:num)', 'Admin\Classes::delete/$1');
+    $routes->get('classes/approve-enrollment/(:num)/(:num)', 'Admin\ClassDetail::approveEnrollment/$1/$2');
+    $routes->get('classes/reject-enrollment/(:num)/(:num)', 'Admin\ClassDetail::rejectEnrollment/$1/$2');
+    $routes->get('classes/delete-content/(:num)/(:num)', 'Admin\ClassDetail::deleteContent/$1/$2');
 
     // Content
     $routes->get('content', 'Admin\Content::index');
