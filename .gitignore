@@ -1,0 +1,13 @@
+/vendor/
+.env
+.env.local
+.env.production
+writable/*
+!writable/.gitkeep
+public/uploads/*
+!public/uploads/.gitkeep
+.idea/
+.vscode/
+*.swp
+*.swo
+docker-compose.override.yml
