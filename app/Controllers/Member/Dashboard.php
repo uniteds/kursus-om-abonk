@@ -4,12 +4,14 @@ namespace App\Controllers\Member;
 
 use App\Controllers\BaseController;
 use App\Models\EnrollmentModel;
+use App\Models\AnnouncementModel;
 
 class Dashboard extends BaseController
 {
     public function index()
     {
         $model = new EnrollmentModel();
+        $announcementModel = new AnnouncementModel();
         $userId = $this->session->get('user_id');
 
         $enrollments = $model->getEnrollmentsByUser($userId);
@@ -18,12 +20,13 @@ class Dashboard extends BaseController
         $completed = $model->where('user_id', $userId)->where('status', 'completed')->countAllResults();
 
         return view('member/dashboard', [
-            'title'         => 'Dashboard',
-            'enrollments'   => $enrollments,
-            'pendingCount'  => $pending,
-            'approvedCount' => $approved,
-            'completedCount'=> $completed,
-            'settings'      => $this->getAllSettings(),
+            'title'          => 'Dashboard',
+            'enrollments'    => $enrollments,
+            'pendingCount'   => $pending,
+            'approvedCount'  => $approved,
+            'completedCount' => $completed,
+            'announcements'  => $announcementModel->getForMembers(5),
+            'settings'       => $this->getAllSettings(),
         ]);
     }
 }

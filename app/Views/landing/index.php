@@ -345,6 +345,24 @@
             font-weight: 600; font-size: .9rem; transition: all .2s;
         }
         .view-all-articles:hover { background: #4338ca; transform: translateY(-2px); color: #fff; }
+
+        /* ===== ANNOUNCEMENTS ===== */
+        .announcements-section { background: #f8f9ff; }
+        .announce-card {
+            background: #fff; border-radius: 1rem; padding: 1.5rem;
+            border: 1px solid #f0f0f5; transition: all .3s;
+            display: flex; gap: 1rem; align-items: flex-start;
+        }
+        .announce-card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,0,0,.06); }
+        .announce-icon {
+            flex-shrink: 0; width: 52px; height: 52px; border-radius: .75rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        .announce-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: .3rem; }
+        .announce-body p { font-size: .85rem; color: #6b7280; line-height: 1.5; margin-bottom: .4rem; }
+        .announce-body .announce-meta { font-size: .75rem; color: #9ca3af; display: flex; gap: .8rem; }
+        .announce-body .announce-meta span { display: flex; align-items: center; gap: .25rem; }
     </style>
 </head>
 <body>
@@ -359,11 +377,38 @@
         <a href="#fitur">Fitur</a>
         <a href="#kursus">Kursus</a>
         <a href="#artikel">Artikel</a>
+        <a href="#pengumuman">Pengumuman</a>
         <a href="#alasan">Mengapa Kami</a>
         <a href="/login" class="btn-nav-login">Masuk</a>
         <a href="/register" class="btn-nav-register">Daftar Gratis</a>
     </div>
 </nav>
+
+<!-- ANNOUNCEMENT BANNER -->
+<?php if (!empty($announcements)): ?>
+<div id="announcement-bar">
+    <?php
+    $colorMap = [
+        'primary' => ['#4f46e5', 'rgba(79,70,229,.08)'],
+        'success' => ['#059669', 'rgba(5,150,105,.08)'],
+        'danger'  => ['#dc2626', 'rgba(220,38,38,.08)'],
+        'warning' => ['#d97706', 'rgba(217,119,6,.08)'],
+        'info'    => ['#0891b2', 'rgba(8,145,178,.08)'],
+    ];
+    ?>
+    <?php foreach ($announcements as $idx => $a):
+        $c = $colorMap[$a->color] ?? $colorMap['primary'];
+    ?>
+    <div class="announcement-slide" style="background:<?= $c[1] ?>;border-left:4px solid <?= $c[0] ?>;padding:.7rem 2rem;display:flex;align-items:center;justify-content:center;gap:.8rem;cursor:pointer;" onclick="this.style.display='none'">
+        <i class="<?= esc($a->icon ?? 'fas fa-bullhorn') ?>" style="color:<?= $c[0] ?>;font-size:1rem;"></i>
+        <span style="font-weight:600;font-size:.9rem;color:#1a1a2e;"><?= esc($a->title) ?></span>
+        <span style="font-size:.85rem;color:#555;"><?= $a->body ?></span>
+        <span style="font-size:.75rem;color:#999;white-space:nowrap;"><?= date('d M', strtotime($a->published_at ?? $a->created_at)) ?></span>
+        <i class="fas fa-times" style="color:#999;font-size:.75rem;margin-left:.5rem;" onclick="event.stopPropagation();this.parentElement.style.display='none'"></i>
+    </div>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>
 
 <!-- HERO -->
 <section class="hero">
@@ -523,6 +568,46 @@
         </div>
     </div>
 </section>
+
+<!-- ANNOUNCEMENTS -->
+<?php if (!empty($announcements)): ?>
+<section class="announcements-section" id="pengumuman">
+    <div class="container">
+        <div class="section-header fade-up">
+            <h2>Pengumuman Terbaru</h2>
+            <p>Informasi penting seputar kelas, diskon, dan event dari Om Abonk</p>
+            <div class="accent-line"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem;">
+            <?php
+            $bgMap = [
+                'primary' => ['#eef2ff', '#4f46e5'], 'success' => ['#ecfdf5', '#059669'],
+                'danger'  => ['#fef2f2', '#dc2626'], 'warning' => ['#fffbeb', '#d97706'],
+                'info'    => ['#ecfeff', '#0891b2'], 'secondary'=> ['#f3f4f6', '#6b7280'],
+                'dark'    => ['#f3f4f6', '#1a1a2e'],
+            ];
+            ?>
+            <?php foreach ($announcements as $a):
+                $bg = $bgMap[$a->color] ?? $bgMap['primary'];
+            ?>
+            <div class="announce-card fade-up">
+                <div class="announce-icon" style="background:<?= $bg[0] ?>;color:<?= $bg[1] ?>;">
+                    <i class="<?= esc($a->icon ?? 'fas fa-bullhorn') ?>"></i>
+                </div>
+                <div class="announce-body">
+                    <h3><?= esc($a->title) ?></h3>
+                    <p><?= strip_tags($a->body) ?></p>
+                    <div class="announce-meta">
+                        <span><i class="fas fa-folder"></i> <?= ucfirst($a->type) ?></span>
+                        <span><i class="fas fa-clock"></i> <?= date('d M Y', strtotime($a->published_at ?? $a->created_at)) ?></span>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 
 <!-- WHY US -->
 <section class="why-us" id="alasan">

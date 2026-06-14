@@ -43,9 +43,54 @@
 
 <div class="row">
     <div class="col-12">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-bullhorn mr-1"></i> Pengumuman Terbaru</h3>
+            </div>
+            <div class="card-body p-0">
+                <?php if (empty($announcements)): ?>
+                    <div class="text-center py-4">
+                        <i class="fas fa-bell-slash fa-2x text-muted mb-2"></i>
+                        <p class="text-muted mb-0">Belum ada pengumuman.</p>
+                    </div>
+                <?php else: ?>
+                    <?php
+                    $colorMap = [
+                        'primary' => 'primary', 'success' => 'success', 'danger' => 'danger',
+                        'warning' => 'warning', 'info' => 'info', 'secondary' => 'secondary', 'dark' => 'dark',
+                    ];
+                    ?>
+                    <?php foreach ($announcements as $a): ?>
+                        <?php $c = $colorMap[$a->color] ?? 'primary'; ?>
+                        <div class="callout callout-<?= $c ?>" style="margin:0;border-radius:0;border-left-width:4px;">
+                            <div class="d-flex align-items-start">
+                                <div class="mr-3">
+                                    <i class="<?= esc($a->icon ?? 'fas fa-bullhorn') ?> fa-2x text-<?= $c ?>"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 style="margin:0 0 .25rem;font-weight:700;">
+                                        <?= esc($a->title) ?>
+                                        <span class="badge badge-<?= $c ?>" style="font-size:.65rem;vertical-align:middle;"><?= ucfirst($a->type) ?></span>
+                                    </h5>
+                                    <div style="font-size:.85rem;line-height:1.6;color:#444;">
+                                        <?= $a->body ?>
+                                    </div>
+                                    <small class="text-muted"><i class="fas fa-clock"></i> <?= date('d M Y H:i', strtotime($a->published_at ?? $a->created_at)) ?></small>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-bell mr-1"></i> Kursus Terbaru yang Diikuti</h3>
+                <h3 class="card-title"><i class="fas fa-graduation-cap mr-1"></i> Kursus Terbaru yang Diikuti</h3>
                 <div class="card-tools">
                     <a href="/member/courses" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> Jelajahi Kursus</a>
                 </div>
