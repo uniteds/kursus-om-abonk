@@ -1,9 +1,27 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= esc($settings['site_name'] ?? 'Om Abonk') ?> - <?= esc($settings['site_description'] ?? 'Platform Belajar IT') ?></title>
+    <meta name="description" content="<?= esc($settings['site_description'] ?? 'Platform kursus IT untuk pemula hingga mahir. Belajar coding, jaringan, dan desain bersama Om Abonk.') ?>">
+    <meta name="keywords" content="kursus IT, belajar coding, belajar pemrograman, LMS, om abonk, kursus online, belajar IT pemula">
+    <meta name="author" content="Om Abonk">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="<?= esc(base_url('/')) ?>">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?= esc($settings['site_name'] ?? 'Om Abonk') ?> - Belajar IT Jadi Mudah">
+    <meta property="og:description" content="<?= esc($settings['site_tagline'] ?? 'Platform belajar IT yang mudah, seru, dan terstruktur untuk semua kalangan.') ?>">
+    <meta property="og:image" content="<?= esc(base_url('/images/og-default.svg')) ?>">
+    <meta property="og:url" content="<?= esc(base_url('/')) ?>">
+    <meta property="og:site_name" content="<?= esc($settings['site_name'] ?? 'Om Abonk') ?>">
+    <meta property="og:locale" content="id_ID">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= esc($settings['site_name'] ?? 'Om Abonk') ?> - Belajar IT Jadi Mudah">
+    <meta name="twitter:description" content="<?= esc($settings['site_tagline'] ?? 'Platform belajar IT yang mudah, seru, dan terstruktur untuk semua kalangan.') ?>">
+    <meta name="twitter:image" content="<?= esc(base_url('/images/og-default.svg')) ?>">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

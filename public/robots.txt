@@ -1,2 +1,14 @@
 User-agent: *
-Disallow: 
+Allow: /
+Allow: /course/
+
+Disallow: /admin/
+Disallow: /member/
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email/
+Disallow: /logout
+
+Sitemap: https://ayodaftar.web.id/sitemap.xml

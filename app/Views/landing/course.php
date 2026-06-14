@@ -1,9 +1,27 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= esc($course->title) ?> - <?= esc($settings['site_name'] ?? 'Om Abonk') ?></title>
+    <meta name="description" content="<?= esc(substr($course->description ?? $settings['site_description'] ?? 'Kursus ' . $course->title . ' di Om Abonk', 0, 160)) ?>">
+    <meta name="keywords" content="<?= esc($course->title) ?>, <?= esc($course->category_name ?? 'kursus IT') ?>, belajar, om abonk">
+    <meta name="author" content="Om Abonk">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="<?= esc(base_url('/course/' . $course->slug)) ?>">
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="<?= esc($course->title) ?> - <?= esc($settings['site_name'] ?? 'Om Abonk') ?>">
+    <meta property="og:description" content="<?= esc(substr($course->description ?? 'Belajar ' . $course->title . ' di Om Abonk.', 0, 200)) ?>">
+    <meta property="og:image" content="<?= esc(base_url(!empty($course->thumbnail) ? '/uploads/thumbnails/' . $course->thumbnail : '/images/og-default.svg')) ?>">
+    <meta property="og:url" content="<?= esc(base_url('/course/' . $course->slug)) ?>">
+    <meta property="og:site_name" content="<?= esc($settings['site_name'] ?? 'Om Abonk') ?>">
+    <meta property="og:locale" content="id_ID">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= esc($course->title) ?> - <?= esc($settings['site_name'] ?? 'Om Abonk') ?>">
+    <meta name="twitter:description" content="<?= esc(substr($course->description ?? 'Belajar ' . $course->title . ' di Om Abonk.', 0, 200)) ?>">
+    <meta name="twitter:image" content="<?= esc(base_url(!empty($course->thumbnail) ? '/uploads/thumbnails/' . $course->thumbnail : '/images/og-default.svg')) ?>">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

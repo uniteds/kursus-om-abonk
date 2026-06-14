@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= esc($title ?? 'Dashboard') ?> - <?= esc($settings['site_name'] ?? 'Om Abonk') ?></title>
+    <meta name="description" content="<?= esc($settings['site_description'] ?? 'Platform kursus IT untuk pemula hingga mahir') ?>">
+    <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
