@@ -5,7 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\ClassModel;
 use App\Models\CourseModel;
-use App\Models\ContentModel;
+use App\Models\ClassMaterialModel;
 use App\Models\AnnouncementModel;
 use App\Models\EnrollmentModel;
 
@@ -15,7 +15,7 @@ class ClassDetail extends BaseController
     {
         $classModel = new ClassModel();
         $courseModel = new CourseModel();
-        $contentModel = new ContentModel();
+        $materialModel = new ClassMaterialModel();
         $announcementModel = new AnnouncementModel();
         $enrollmentModel = new EnrollmentModel();
 
@@ -45,10 +45,7 @@ class ClassDetail extends BaseController
             }
         }
 
-        $contents = $contentModel->where('class_id', $id)
-            ->orderBy('sort_order', 'ASC')
-            ->orderBy('id', 'ASC')
-            ->findAll();
+        $materials = $materialModel->getByClass($id);
 
         $announcements = $announcementModel->where('class_id', $id)
             ->orderBy('id', 'DESC')
@@ -63,7 +60,7 @@ class ClassDetail extends BaseController
             'pendingCount'    => $pendingCount,
             'approvedCount'   => $approvedCount,
             'rejectedCount'   => $rejectedCount,
-            'contents'        => $contents,
+            'materials'      => $materials,
             'announcements'   => $announcements,
             'tab'             => $tab,
             'settings'        => $this->getAllSettings(),

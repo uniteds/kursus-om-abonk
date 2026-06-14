@@ -10,8 +10,9 @@ $statusColors = ['upcoming' => 'warning', 'ongoing' => 'success', 'completed' =>
 $statusLabels = ['upcoming' => 'Akan Datang', 'ongoing' => 'Berlangsung', 'completed' => 'Selesai'];
 $color = $statusColors[$class->status] ?? 'secondary';
 $colorLabel = $statusLabels[$class->status] ?? ucfirst($class->status);
-$occupied = count($enrollments);
-$fillPercent = $class->capacity > 0 ? round(($occupied / $class->capacity) * 100) : 0;
+    $occupied = count($enrollments);
+    $fillPercent = $class->capacity > 0 ? round(($occupied / $class->capacity) * 100) : 0;
+    $materialCount = count($materials);
 ?>
 
 <div class="row">
@@ -65,7 +66,7 @@ $fillPercent = $class->capacity > 0 ? round(($occupied / $class->capacity) * 100
     <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
             <div class="inner">
-                <h3><?= count($contents) ?></h3>
+                <h3><?= $materialCount ?></h3>
                 <p>Materi</p>
             </div>
             <div class="icon"><i class="fas fa-file-alt"></i></div>
@@ -85,7 +86,7 @@ $fillPercent = $class->capacity > 0 ? round(($occupied / $class->capacity) * 100
             </li>
             <li class="nav-item">
                 <a class="nav-link <?= $tab === 'materi' ? 'active' : '' ?>" href="?tab=materi">
-                    <i class="fas fa-book"></i> Materi <span class="badge badge-primary ml-1"><?= count($contents) ?></span>
+                    <i class="fas fa-book"></i> Materi <span class="badge badge-primary ml-1"><?= $materialCount ?></span>
                 </a>
             </li>
             <li class="nav-item">
@@ -163,13 +164,13 @@ $fillPercent = $class->capacity > 0 ? round(($occupied / $class->capacity) * 100
         <?php elseif ($tab === 'materi'): ?>
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0"><i class="fas fa-book mr-1"></i> Materi Kelas</h5>
-                <a href="/admin/content/create" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Tambah Materi</a>
+                <a href="/admin/classes/materials/<?= $class->id ?>" class="btn btn-primary btn-sm"><i class="fas fa-cog"></i> Kelola Materi</a>
             </div>
-            <?php if (empty($contents)): ?>
+            <?php if (empty($materials)): ?>
                 <div class="text-center py-4">
                     <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
                     <p class="text-muted">Belum ada materi untuk kelas ini.</p>
-                    <a href="/admin/content/create" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Materi Pertama</a>
+                    <a href="/admin/classes/materials/create/<?= $class->id ?>" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Materi Pertama</a>
                 </div>
             <?php else: ?>
                 <div class="table-responsive">
@@ -177,40 +178,48 @@ $fillPercent = $class->capacity > 0 ? round(($occupied / $class->capacity) * 100
                         <thead class="thead-light">
                             <tr>
                                 <th width="50">No</th>
+                                <th width="50">Urutan</th>
                                 <th>Judul Materi</th>
                                 <th width="100">Tipe</th>
-                                <th width="100">Urutan</th>
                                 <th width="120">File</th>
-                                <th width="100">Aksi</th>
+                                <th width="80">Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($contents as $idx => $c): ?>
+                            <?php foreach ($materials as $idx => $m): ?>
                                 <tr>
                                     <td><?= $idx + 1 ?></td>
-                                    <td><strong><?= esc($c->title) ?></strong></td>
+                                    <td class="text-center"><span class="badge badge-secondary"><?= $m->sort_order ?></span></td>
+                                    <td><strong><?= esc($m->title) ?></strong></td>
                                     <td>
                                         <?php
-                                        $typeIcons = ['video' => 'video', 'document' => 'file-alt', 'link' => 'link'];
-                                        $typeColors = ['video' => 'danger', 'document' => 'primary', 'link' => 'info'];
+                                        $tc = [
+                                            'document' => ['icon' => 'fas fa-file-alt', 'color' => 'primary', 'label' => 'Dokumen'],
+                                            'video'    => ['icon' => 'fas fa-video', 'color' => 'danger', 'label' => 'Video'],
+                                            'link'     => ['icon' => 'fas fa-link', 'color' => 'info', 'label' => 'Link'],
+                                            'slide'    => ['icon' => 'fas fa-chalkboard', 'color' => 'warning', 'label' => 'Slide'],
+                                            'tugas'    => ['icon' => 'fas fa-tasks', 'color' => 'success', 'label' => 'Tugas'],
+                                            'other'    => ['icon' => 'fas fa-ellipsis-h', 'color' => 'secondary', 'label' => 'Lainnya'],
+                                        ];
+                                        $t = $tc[$m->type] ?? $tc['other'];
                                         ?>
-                                        <span class="badge badge-<?= $typeColors[$c->type] ?? 'secondary' ?>">
-                                            <i class="fas fa-<?= $typeIcons[$c->type] ?? 'file' ?>"></i> <?= ucfirst($c->type) ?>
-                                        </span>
+                                        <span class="badge badge-<?= $t['color'] ?>"><i class="<?= $t['icon'] ?>"></i> <?= $t['label'] ?></span>
                                     </td>
-                                    <td class="text-center"><?= $c->sort_order ?></td>
                                     <td>
-                                        <?php if ($c->type === 'link' && $c->file_path): ?>
-                                            <a href="<?= esc($c->file_path) ?>" target="_blank"><i class="fas fa-external-link-alt"></i> Link</a>
-                                        <?php elseif ($c->file_path): ?>
-                                            <a href="/uploads/files/<?= esc($c->file_path) ?>" target="_blank"><i class="fas fa-download"></i> File</a>
+                                        <?php if ($m->type === 'link' && $m->external_url): ?>
+                                            <a href="<?= esc($m->external_url) ?>" target="_blank"><i class="fas fa-external-link-alt"></i> Buka</a>
+                                        <?php elseif ($m->file_path): ?>
+                                            <a href="/admin/classes/materials/download/<?= $class->id ?>/<?= $m->id ?>"><i class="fas fa-download"></i> File</a>
                                         <?php else: ?>
                                             <span class="text-muted">-</span>
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <a href="/admin/content/edit/<?= $c->id ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                        <button onclick="confirmDelete('/admin/classes/delete-content/<?= $class->id ?>/<?= $c->id ?>')" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <?php if ($m->is_published): ?>
+                                            <span class="badge badge-success">Aktif</span>
+                                        <?php else: ?>
+                                            <span class="badge badge-secondary">Draft</span>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

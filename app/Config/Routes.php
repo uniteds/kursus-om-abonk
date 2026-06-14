@@ -71,6 +71,15 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->get('classes/reject-enrollment/(:num)/(:num)', 'Admin\ClassDetail::rejectEnrollment/$1/$2');
     $routes->get('classes/delete-content/(:num)/(:num)', 'Admin\ClassDetail::deleteContent/$1/$2');
 
+    // Class Materials
+    $routes->get('classes/materials/(:num)', 'Admin\ClassMaterials::index/$1');
+    $routes->get('classes/materials/create/(:num)', 'Admin\ClassMaterials::create/$1');
+    $routes->post('classes/materials/store/(:num)', 'Admin\ClassMaterials::store/$1');
+    $routes->get('classes/materials/edit/(:num)/(:num)', 'Admin\ClassMaterials::edit/$1/$2');
+    $routes->post('classes/materials/update/(:num)/(:num)', 'Admin\ClassMaterials::update/$1/$2');
+    $routes->get('classes/materials/delete/(:num)/(:num)', 'Admin\ClassMaterials::delete/$1/$2');
+    $routes->get('classes/materials/download/(:num)/(:num)', 'Admin\ClassMaterials::download/$1/$2');
+
     // Content
     $routes->get('content', 'Admin\Content::index');
     $routes->get('content/create', 'Admin\Content::create');
