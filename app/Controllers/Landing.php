@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\SiteSettingModel;
 use App\Models\CourseModel;
 use App\Models\CategoryModel;
+use App\Models\ContentModel;
 
 class Landing extends BaseController
 {
@@ -13,6 +14,7 @@ class Landing extends BaseController
         $settingsModel  = new SiteSettingModel();
         $courseModel    = new CourseModel();
         $categoryModel  = new CategoryModel();
+        $contentModel   = new ContentModel();
 
         $data['settings']   = $settingsModel->getAllSettings();
         $data['courses']    = $courseModel->select('courses.*, categories.name as category_name')
@@ -21,6 +23,7 @@ class Landing extends BaseController
         $data['categories'] = $categoryModel->orderBy('name', 'ASC')->findAll();
         $data['courseCount']= $courseModel->countAllResults();
         $data['userCount']  = model('UserModel')->countAllResults();
+        $data['articles']   = $contentModel->getPublished(3);
 
         return view('landing/index', $data);
     }

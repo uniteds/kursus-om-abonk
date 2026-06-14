@@ -4,7 +4,6 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\ContentModel;
-use App\Models\ClassModel;
 
 class Content extends BaseController
 {
@@ -12,19 +11,11 @@ class Content extends BaseController
     {
         $model = new ContentModel();
         $keyword = $this->request->getGet('q');
-
-        $builder = $model->builder();
-        $builder->select('content.*, classes.name as class_name, courses.title as course_title');
-        $builder->join('classes', 'classes.id = content.class_id', 'left');
-        $builder->join('courses', 'courses.id = classes.course_id', 'left');
-        if ($keyword) {
-            $builder->like('content.title', $keyword);
-        }
-        $contents = $model->orderBy('content.id', 'DESC')->paginate(10);
+        $contents = $model->getAllAdmin(10, $keyword);
         $pager = $model->pager;
 
         return view('admin/content/index', [
-            'title'    => 'Manage Konten',
+            'title'    => 'Kelola Artikel',
             'contents' => $contents,
             'pager'    => $pager,
             'keyword'  => $keyword,
@@ -34,12 +25,9 @@ class Content extends BaseController
 
     public function create()
     {
-        $classModel = new ClassModel();
-
         return view('admin/content/form', [
-            'title'    => 'Tambah Konten',
+            'title'    => 'Tambah Artikel',
             'content'  => null,
-            'classes'  => $classModel->getClassesWithCourse(),
             'settings' => $this->getAllSettings(),
         ]);
     }
@@ -47,9 +35,9 @@ class Content extends BaseController
     public function store()
     {
         $rules = [
-            'class_id' => 'required',
             'title'    => 'required|min_length[2]|max_length[200]',
-            'type'     => 'required|in_list[video,document,link]',
+            'category' => 'required|in_list[berita,tutorial,artikel]',
+            'body'     => 'required',
         ];
 
         if (!$this->validate($rules)) {
@@ -57,45 +45,44 @@ class Content extends BaseController
         }
 
         $model = new ContentModel();
+        $title = $this->request->getPost('title');
+        $slug = $model->generateSlug($title);
+
         $data = [
-            'class_id'    => $this->request->getPost('class_id'),
-            'title'       => $this->request->getPost('title'),
+            'title'       => $title,
+            'slug'        => $slug,
             'description' => $this->request->getPost('description'),
-            'type'        => $this->request->getPost('type'),
-            'sort_order'  => $this->request->getPost('sort_order') ?? 0,
+            'excerpt'     => $this->request->getPost('excerpt'),
+            'body'        => $this->request->getPost('body'),
+            'category'    => $this->request->getPost('category'),
+            'is_published' => $this->request->getPost('is_published') ? 1 : 0,
+            'published_at' => $this->request->getPost('is_published') ? date('Y-m-d H:i:s') : null,
         ];
 
-        $type = $this->request->getPost('type');
-        if ($type === 'link') {
-            $data['file_path'] = $this->request->getPost('file_path');
-        } else {
-            $file = $this->request->getFile('file');
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                $newName = $file->getRandomName();
-                $file->move(WRITEPATH . 'uploads/files', $newName);
-                $data['file_path'] = $newName;
-            }
+        $file = $this->request->getFile('thumbnail');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(WRITEPATH . 'uploads/thumbnails', $newName);
+            $data['thumbnail'] = $newName;
         }
 
         $model->save($data);
 
-        return redirect()->to('/admin/content')->with('success', 'Konten berhasil ditambahkan.');
+        return redirect()->to('/admin/content')->with('success', 'Artikel berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
         $model = new ContentModel();
-        $classModel = new ClassModel();
         $content = $model->find($id);
 
         if (!$content) {
-            return redirect()->to('/admin/content')->with('error', 'Konten tidak ditemukan.');
+            return redirect()->to('/admin/content')->with('error', 'Artikel tidak ditemukan.');
         }
 
         return view('admin/content/form', [
-            'title'    => 'Edit Konten',
+            'title'    => 'Edit Artikel',
             'content'  => $content,
-            'classes'  => $classModel->getClassesWithCourse(),
             'settings' => $this->getAllSettings(),
         ]);
     }
@@ -105,39 +92,42 @@ class Content extends BaseController
         $model = new ContentModel();
 
         $rules = [
-            'class_id' => 'required',
             'title'    => 'required|min_length[2]|max_length[200]',
-            'type'     => 'required|in_list[video,document,link]',
+            'category' => 'required|in_list[berita,tutorial,artikel]',
+            'body'     => 'required',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
         }
 
+        $title = $this->request->getPost('title');
         $data = [
             'id'          => $id,
-            'class_id'    => $this->request->getPost('class_id'),
-            'title'       => $this->request->getPost('title'),
+            'title'       => $title,
+            'slug'        => $model->generateSlug($title, $id),
             'description' => $this->request->getPost('description'),
-            'type'        => $this->request->getPost('type'),
-            'sort_order'  => $this->request->getPost('sort_order') ?? 0,
+            'excerpt'     => $this->request->getPost('excerpt'),
+            'body'        => $this->request->getPost('body'),
+            'category'    => $this->request->getPost('category'),
+            'is_published' => $this->request->getPost('is_published') ? 1 : 0,
         ];
 
-        $type = $this->request->getPost('type');
-        if ($type === 'link') {
-            $data['file_path'] = $this->request->getPost('file_path');
-        } else {
-            $file = $this->request->getFile('file');
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                $newName = $file->getRandomName();
-                $file->move(WRITEPATH . 'uploads/files', $newName);
-                $data['file_path'] = $newName;
-            }
+        $existing = $model->find($id);
+        if ($this->request->getPost('is_published') && !$existing->published_at) {
+            $data['published_at'] = date('Y-m-d H:i:s');
+        }
+
+        $file = $this->request->getFile('thumbnail');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(WRITEPATH . 'uploads/thumbnails', $newName);
+            $data['thumbnail'] = $newName;
         }
 
         $model->save($data);
 
-        return redirect()->to('/admin/content')->with('success', 'Konten berhasil diperbarui.');
+        return redirect()->to('/admin/content')->with('success', 'Artikel berhasil diperbarui.');
     }
 
     public function delete($id)
@@ -145,6 +135,6 @@ class Content extends BaseController
         $model = new ContentModel();
         $model->delete($id);
 
-        return redirect()->to('/admin/content')->with('success', 'Konten berhasil dihapus.');
+        return redirect()->to('/admin/content')->with('success', 'Artikel berhasil dihapus.');
     }
 }

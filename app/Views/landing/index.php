@@ -305,6 +305,46 @@
             transition: all .6s ease-out;
         }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* ===== ARTICLES ===== */
+        .articles-section { background: #fff; }
+        .article-card {
+            background: #f8f9ff; border-radius: 1rem; overflow: hidden;
+            border: 1px solid #f0f0f5; transition: all .3s;
+            display: block; text-decoration: none; color: inherit;
+        }
+        .article-card:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(79,70,229,.08); text-decoration: none; }
+        .article-thumb-sm {
+            height: 160px; background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .article-thumb-sm img { width: 100%; height: 100%; object-fit: cover; }
+        .article-thumb-sm i { font-size: 2.5rem; color: rgba(255,255,255,.3); }
+        .article-thumb-sm .article-badge-sm {
+            position: absolute; top: .6rem; left: .6rem;
+            background: rgba(255,255,255,.9); color: #4f46e5;
+            padding: .2rem .6rem; border-radius: 50px;
+            font-size: .7rem; font-weight: 600;
+        }
+        .article-body-sm { padding: 1rem 1.2rem 1.2rem; }
+        .article-body-sm h3 {
+            font-size: .95rem; font-weight: 700; margin-bottom: .4rem; line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .article-body-sm p {
+            font-size: .8rem; color: #6b7280; line-height: 1.5; margin-bottom: .8rem;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .article-meta-sm { font-size: .75rem; color: #9ca3af; display: flex; gap: .8rem; }
+        .article-meta-sm span { display: flex; align-items: center; gap: .25rem; }
+        .view-all-articles {
+            display: inline-flex; align-items: center; gap: .4rem;
+            padding: .6rem 1.5rem; border-radius: .5rem;
+            background: #4f46e5; color: #fff; text-decoration: none;
+            font-weight: 600; font-size: .9rem; transition: all .2s;
+        }
+        .view-all-articles:hover { background: #4338ca; transform: translateY(-2px); color: #fff; }
     </style>
 </head>
 <body>
@@ -318,6 +358,7 @@
     <div class="nav-links">
         <a href="#fitur">Fitur</a>
         <a href="#kursus">Kursus</a>
+        <a href="#artikel">Artikel</a>
         <a href="#alasan">Mengapa Kami</a>
         <a href="/login" class="btn-nav-login">Masuk</a>
         <a href="/register" class="btn-nav-register">Daftar Gratis</a>
@@ -434,6 +475,51 @@
                     </a>
                 <?php endforeach; ?>
             <?php endif; ?>
+        </div>
+    </div>
+</section>
+
+<!-- ARTICLES -->
+<section class="articles-section" id="artikel">
+    <div class="container">
+        <div class="section-header fade-up">
+            <h2>Artikel & Tutorial Terbaru</h2>
+            <p>Baca artikel, tutorial, dan berita terbaru seputar IT dan pemrograman</p>
+            <div class="accent-line"></div>
+        </div>
+        <div class="courses-grid">
+            <?php if (empty($articles)): ?>
+                <div class="empty-courses fade-up">
+                    <i class="fas fa-newspaper"></i>
+                    <p>Belum ada artikel saat ini.</p>
+                </div>
+            <?php else: ?>
+                <?php foreach ($articles as $a): ?>
+                    <a href="/artikel/<?= esc($a->slug) ?>" class="article-card fade-up">
+                        <div class="article-thumb-sm">
+                            <?php if (!empty($a->thumbnail)): ?>
+                                <img src="/uploads/thumbnails/<?= esc($a->thumbnail) ?>" alt="<?= esc($a->title) ?>">
+                            <?php else: ?>
+                                <i class="fas fa-newspaper"></i>
+                            <?php endif; ?>
+                            <span class="article-badge-sm"><?= ucfirst(esc($a->category)) ?></span>
+                        </div>
+                        <div class="article-body-sm">
+                            <h3><?= esc($a->title) ?></h3>
+                            <p><?= esc($a->excerpt ?? strip_tags(substr($a->body, 0, 100))) ?>...</p>
+                            <div class="article-meta-sm">
+                                <span><i class="fas fa-calendar-alt"></i> <?= date('d M Y', strtotime($a->published_at ?? $a->created_at)) ?></span>
+                                <span><i class="fas fa-eye"></i> <?= number_format($a->views ?? 0) ?></span>
+                            </div>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <div style="text-align:center;margin-top:2rem;" class="fade-up">
+            <a href="/artikel" class="view-all-articles">
+                <i class="fas fa-arrow-right"></i> Lihat Semua Artikel
+            </a>
         </div>
     </div>
 </section>
