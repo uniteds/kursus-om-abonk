@@ -84,7 +84,7 @@ class ContentModel extends Model
         }
     }
 
-    public function getAllAdmin(int $perPage = 10, string $keyword = '')
+    public function getAllAdmin(int $perPage = 10, ?string $keyword = '')
     {
         $builder = $this->builder();
         if ($keyword) {

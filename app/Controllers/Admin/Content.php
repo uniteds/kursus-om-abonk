@@ -10,7 +10,7 @@ class Content extends BaseController
     public function index()
     {
         $model = new ContentModel();
-        $keyword = $this->request->getGet('q');
+        $keyword = $this->request->getGet('q') ?? '';
         $contents = $model->getAllAdmin(10, $keyword);
         $pager = $model->pager;
 
