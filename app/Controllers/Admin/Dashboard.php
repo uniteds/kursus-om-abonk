@@ -8,6 +8,7 @@ use App\Models\CourseModel;
 use App\Models\ClassModel;
 use App\Models\EnrollmentModel;
 use App\Models\ContentModel;
+use App\Models\VisitorLogModel;
 
 class Dashboard extends BaseController
 {
@@ -18,6 +19,7 @@ class Dashboard extends BaseController
         $classModel = new ClassModel();
         $enrollmentModel = new EnrollmentModel();
         $contentModel = new ContentModel();
+        $visitorModel = new VisitorLogModel();
 
         $data = [
             'title'            => 'Dashboard Admin',
@@ -30,6 +32,16 @@ class Dashboard extends BaseController
             'approvedEnrollments' => $enrollmentModel->countByStatus('approved'),
             'totalContent'     => $contentModel->countAllResults(),
             'settings'         => $this->getAllSettings(),
+            // Visitor stats
+            'visitorsToday'      => $visitorModel->countToday(),
+            'visitorsMonth'      => $visitorModel->countThisMonth(),
+            'visitorsUniqueToday'=> $visitorModel->countUniqueToday(),
+            'visitorsUniqueMonth'=> $visitorModel->countUniqueThisMonth(),
+            'visitorsTotal'      => $visitorModel->getTotalAllTime(),
+            'visitorsUniqueTotal'=> $visitorModel->getUniqueAllTime(),
+            'dailyStats'         => $visitorModel->getDailyStats(7),
+            'topPages'           => $visitorModel->getTopPages(10),
+            'hourlyStats'        => $visitorModel->getHourlyStats(),
         ];
 
         return view('admin/dashboard', $data);

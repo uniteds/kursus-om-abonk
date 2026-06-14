@@ -16,6 +16,7 @@ use App\Filters\Auth;
 use App\Filters\AdminFilter;
 use App\Filters\MemberFilter;
 use App\Filters\GuestFilter;
+use App\Filters\VisitorTracker;
 
 class Filters extends BaseFilters
 {
@@ -33,6 +34,7 @@ class Filters extends BaseFilters
         'admin'         => AdminFilter::class,
         'member'        => MemberFilter::class,
         'guest'         => GuestFilter::class,
+        'tracker'       => VisitorTracker::class,
     ];
 
     public array $required = [
@@ -40,6 +42,7 @@ class Filters extends BaseFilters
             'forcehttps',
         ],
         'after' => [
+            'tracker',
             'pagecache',
             'performance',
             'toolbar',
