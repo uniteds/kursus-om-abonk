@@ -119,6 +119,7 @@ $routes->group('member', ['filter' => 'member'], function ($routes) {
     $routes->post('courses/enroll/(:num)', 'Member\Courses::enroll/$1');
     $routes->get('my-courses', 'Member\MyCourses::index');
     $routes->get('class/(:num)', 'Member\ClassDetail::index/$1');
+    $routes->get('class-materials/download/(:num)/(:num)', 'Member\ClassMaterialDownload::index/$1/$2');
     $routes->get('profile', 'Member\Profile::index');
     $routes->post('profile/update', 'Member\Profile::update');
 });

@@ -4,7 +4,7 @@ namespace App\Controllers\Member;
 
 use App\Controllers\BaseController;
 use App\Models\ClassModel;
-use App\Models\ContentModel;
+use App\Models\ClassMaterialModel;
 use App\Models\AnnouncementModel;
 use App\Models\EnrollmentModel;
 
@@ -13,12 +13,11 @@ class ClassDetail extends BaseController
     public function index($id)
     {
         $classModel = new ClassModel();
-        $contentModel = new ContentModel();
+        $materialModel = new ClassMaterialModel();
         $announcementModel = new AnnouncementModel();
         $enrollmentModel = new EnrollmentModel();
         $userId = $this->session->get('user_id');
 
-        // Check enrollment
         $enrollment = $enrollmentModel->where('user_id', $userId)->where('class_id', $id)->first();
 
         if (!$enrollment || $enrollment->status !== 'approved') {
@@ -26,7 +25,7 @@ class ClassDetail extends BaseController
         }
 
         $class = $classModel->getClassBySlug($id);
-        $contents = $contentModel->getContentByClass($id);
+        $materials = $materialModel->getPublishedByClass($id);
         $announcements = $announcementModel->getAnnouncementsByClass($id);
 
         if (!$class) {
@@ -36,7 +35,7 @@ class ClassDetail extends BaseController
         return view('member/class-detail/index', [
             'title'         => $class->name,
             'class'         => $class,
-            'contents'      => $contents,
+            'materials'     => $materials,
             'announcements' => $announcements,
             'settings'      => $this->getAllSettings(),
         ]);

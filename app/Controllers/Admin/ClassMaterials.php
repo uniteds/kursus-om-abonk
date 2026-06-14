@@ -42,7 +42,7 @@ class ClassMaterials extends BaseController
         }
 
         $model = new ClassMaterialModel();
-        $maxOrder = $model->where('class_id', $classId)->max('sort_order') ?? 0;
+        $maxOrder = $model->selectMax('sort_order')->where('class_id', $classId)->first()->sort_order ?? 0;
 
         return view('admin/class-materials/form', [
             'title'    => 'Tambah Materi',

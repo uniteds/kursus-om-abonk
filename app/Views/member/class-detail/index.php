@@ -30,43 +30,51 @@
             </div>
         </div>
 
-        <!-- Konten -->
+        <!-- Materi -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-file-alt mr-1"></i> Materi Kelas</h3>
+                <h3 class="card-title"><i class="fas fa-book-open mr-1"></i> Materi Kelas</h3>
+                <div class="card-tools">
+                    <span class="badge badge-primary"><?= count($materials) ?> Materi</span>
+                </div>
             </div>
-            <div class="card-body">
-                <?php if (empty($contents)): ?>
-                    <p class="text-muted text-center">Belum ada materi.</p>
+            <div class="card-body p-0">
+                <?php if (empty($materials)): ?>
+                    <p class="text-muted text-center py-4">Belum ada materi untuk kelas ini.</p>
                 <?php else: ?>
-                    <div class="list-group">
-                        <?php foreach ($contents as $c): ?>
-                            <div class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between align-items-center">
-                                    <div>
-                                        <?php
-                                        $typeIcons = ['video' => 'video', 'document' => 'file-alt', 'link' => 'link'];
-                                        $typeColors = ['video' => 'danger', 'document' => 'primary', 'link' => 'info'];
-                                        ?>
-                                        <span class="badge badge-<?= $typeColors[$c->type] ?? 'secondary' ?> mr-2">
-                                            <i class="fas fa-<?= $typeIcons[$c->type] ?? 'file' ?>"></i> <?= ucfirst($c->type) ?>
-                                        </span>
-                                        <strong><?= esc($c->title) ?></strong>
-                                    </div>
-                                    <div>
-                                        <?php if ($c->type === 'link' && $c->file_path): ?>
-                                            <a href="<?= esc($c->file_path) ?>" target="_blank" class="btn btn-info btn-sm"><i class="fas fa-external-link-alt"></i> Buka</a>
-                                        <?php elseif ($c->file_path): ?>
-                                            <a href="/uploads/files/<?= esc($c->file_path) ?>" target="_blank" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Download</a>
-                                        <?php endif; ?>
-                                    </div>
+                    <?php
+                    $typeConfig = [
+                        'document' => ['icon' => 'fas fa-file-alt', 'color' => 'primary', 'label' => 'Dokumen'],
+                        'video'    => ['icon' => 'fas fa-video', 'color' => 'danger', 'label' => 'Video'],
+                        'link'     => ['icon' => 'fas fa-link', 'color' => 'info', 'label' => 'Link'],
+                        'slide'    => ['icon' => 'fas fa-chalkboard', 'color' => 'warning', 'label' => 'Slide'],
+                        'tugas'    => ['icon' => 'fas fa-tasks', 'color' => 'success', 'label' => 'Tugas'],
+                        'other'    => ['icon' => 'fas fa-ellipsis-h', 'color' => 'secondary', 'label' => 'Lainnya'],
+                    ];
+                    ?>
+                    <?php foreach ($materials as $idx => $m): ?>
+                        <?php $tc = $typeConfig[$m->type] ?? $typeConfig['other']; ?>
+                        <div class="list-group-item list-group-item-action" style="border-left:3px solid var(--<?= $tc['color'] ?>-color, #6c757d);">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge badge-<?= $tc['color'] ?> mr-2">
+                                        <i class="<?= $tc['icon'] ?>"></i> <?= $tc['label'] ?>
+                                    </span>
+                                    <strong><?= esc($m->title) ?></strong>
+                                    <?php if ($m->description): ?>
+                                        <br><small class="text-muted"><?= esc(mb_strimwidth($m->description, 0, 120, '...')) ?></small>
+                                    <?php endif; ?>
                                 </div>
-                                <?php if ($c->description): ?>
-                                    <small class="text-muted mt-1 d-block"><?= esc(mb_strimwidth($c->description, 0, 150, '...')) ?></small>
-                                <?php endif; ?>
+                                <div>
+                                    <?php if ($m->type === 'link' && $m->external_url): ?>
+                                        <a href="<?= esc($m->external_url) ?>" target="_blank" class="btn btn-info btn-sm"><i class="fas fa-external-link-alt"></i> Buka Link</a>
+                                    <?php elseif ($m->file_path): ?>
+                                        <a href="/member/class-materials/download/<?= $class->id ?>/<?= $m->id ?>" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Download</a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
+                        </div>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -85,7 +93,7 @@
                     <?php foreach ($announcements as $a): ?>
                         <div class="border-bottom pb-2 mb-2">
                             <strong><?= esc($a->title) ?></strong>
-                            <p class="mb-1 text-muted" style="font-size:0.85rem;"><?= nl2br(esc($a->body)) ?></p>
+                            <p class="mb-1 text-muted" style="font-size:0.85rem;"><?= $a->body ?></p>
                             <small class="text-muted"><i class="fas fa-clock"></i> <?= date('d M Y H:i', strtotime($a->created_at ?? 'now')) ?></small>
                         </div>
                     <?php endforeach; ?>
