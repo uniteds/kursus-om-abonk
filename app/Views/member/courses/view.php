@@ -53,10 +53,14 @@
                                                 <span class="badge badge-info p-2"><?= ucfirst($cls->enrollment_status) ?></span>
                                             <?php endif; ?>
                                         <?php else: ?>
-                                            <form action="/member/courses/enroll/<?= $cls->id ?>" method="POST" style="display:inline;">
-                                                <?= csrf_field() ?>
-                                                <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus-circle"></i> Daftar</button>
-                                            </form>
+                                            <?php if ($course->price > 0): ?>
+                                                <a href="/member/payments/create/<?= $cls->id ?>" class="btn btn-warning btn-sm"><i class="fas fa-credit-card"></i> Bayar & Daftar</a>
+                                            <?php else: ?>
+                                                <form action="/member/courses/enroll/<?= $cls->id ?>" method="POST" style="display:inline;">
+                                                    <?= csrf_field() ?>
+                                                    <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus-circle"></i> Daftar</button>
+                                                </form>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -76,6 +80,14 @@
             <div class="card-body">
                 <p><strong>Kategori:</strong> <?= esc($course->category_name ?? '-') ?></p>
                 <p><strong>Jumlah Kelas:</strong> <?= count($classes) ?></p>
+                <p>
+                    <strong>Harga:</strong><br>
+                    <?php if ($course->price > 0): ?>
+                        <span class="text-primary font-weight-bold" style="font-size:1.3rem;">Rp <?= number_format($course->price, 0, ',', '.') ?></span>
+                    <?php else: ?>
+                        <span class="badge badge-success p-2" style="font-size:1rem;">Gratis</span>
+                    <?php endif; ?>
+                </p>
                 <a href="/member/courses" class="btn btn-secondary btn-block"><i class="fas fa-arrow-left"></i> Kembali</a>
             </div>
         </div>

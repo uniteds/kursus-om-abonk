@@ -71,10 +71,24 @@ class Courses extends BaseController
     public function enroll($classId)
     {
         $enrollmentModel = new \App\Models\EnrollmentModel();
+        $paymentModel = new \App\Models\PaymentModel();
+        $classModel = new \App\Models\ClassModel();
         $userId = $this->session->get('user_id');
 
         if ($enrollmentModel->isEnrolled($userId, $classId)) {
             return redirect()->back()->with('error', 'Anda sudah terdaftar di kelas ini.');
+        }
+
+        $class = $classModel->select('classes.*, courses.price as course_price, courses.id as course_id')
+            ->join('courses', 'courses.id = classes.course_id', 'left')
+            ->where('classes.id', $classId)
+            ->first();
+
+        if ($class && $class->course_price > 0) {
+            if ($paymentModel->hasPendingPayment($userId, $classId)) {
+                return redirect()->back()->with('error', 'Anda sudah memiliki pembayaran yang sedang diproses.');
+            }
+            return redirect()->to('/member/payments/create/' . $classId);
         }
 
         $enrollmentModel->save([

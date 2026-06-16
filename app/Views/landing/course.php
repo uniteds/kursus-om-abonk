@@ -295,6 +295,16 @@
                         <span class="hc-label">Kelas</span>
                         <span class="hc-value"><?= count($classes) ?> Rombongan</span>
                     </div>
+                    <div class="hc-row">
+                        <span class="hc-label">Harga</span>
+                        <span class="hc-value" style="color:#4f46e5;">
+                            <?php if (($course->price ?? 0) > 0): ?>
+                                Rp <?= number_format($course->price, 0, ',', '.') ?>
+                            <?php else: ?>
+                                Gratis
+                            <?php endif; ?>
+                        </span>
+                    </div>
                     <a href="#kelas" class="btn-cta"><i class="fas fa-arrow-down"></i> Lihat Kelas</a>
                 </div>
             </div>
@@ -401,6 +411,16 @@
                     <li>
                         <span class="si-label">Total Peserta</span>
                         <span class="si-value"><?php $t=0; foreach($classes as $c) $t+=(int)($c->total_enrolled??0); echo $t; ?></span>
+                    </li>
+                    <li>
+                        <span class="si-label">Harga</span>
+                        <span class="si-value" style="color:#4f46e5;font-size:1rem;">
+                            <?php if (($course->price ?? 0) > 0): ?>
+                                Rp <?= number_format($course->price, 0, ',', '.') ?>
+                            <?php else: ?>
+                                Gratis
+                            <?php endif; ?>
+                        </span>
                     </li>
                 </ul>
                 <a href="/" class="side-btn side-btn-outline"><i class="fas fa-arrow-left"></i> Kembali</a>

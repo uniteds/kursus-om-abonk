@@ -66,6 +66,7 @@ class Courses extends BaseController
             'meetings_count'   => $this->request->getPost('meetings_count') ?: null,
             'meeting_duration' => $this->request->getPost('meeting_duration') ?: null,
             'curriculum'       => $this->request->getPost('curriculum'),
+            'price'            => $this->request->getPost('price') ?: 0,
             'is_active'        => $this->request->getPost('is_active') ?? 1,
         ];
 
@@ -130,6 +131,7 @@ class Courses extends BaseController
             'meetings_count'   => $this->request->getPost('meetings_count') ?: null,
             'meeting_duration' => $this->request->getPost('meeting_duration') ?: null,
             'curriculum'       => $this->request->getPost('curriculum'),
+            'price'            => $this->request->getPost('price') ?: 0,
             'is_active'        => $this->request->getPost('is_active') ?? 0,
         ];
 

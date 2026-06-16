@@ -42,6 +42,13 @@
                         <input type="number" name="meeting_duration" id="meeting_duration" class="form-control" value="<?= esc($course->meeting_duration ?? old('meeting_duration')) ?>" min="0" placeholder="Contoh: 90">
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="price">Harga (Rp)</label>
+                        <input type="number" name="price" id="price" class="form-control" value="<?= esc($course->price ?? old('price', 0)) ?>" min="0" step="1000" placeholder="0 = Gratis">
+                        <small class="form-text text-muted">Isi 0 jika kursus gratis</small>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="curriculum">Kurikulum / Silabus</label>

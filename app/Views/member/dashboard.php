@@ -41,6 +41,17 @@
     </div>
 </div>
 
+<?php if ($pendingPayments > 0): ?>
+<div class="row">
+    <div class="col-12">
+        <div class="callout callout-warning">
+            <h5><i class="fas fa-money-bill-wave mr-1"></i> Pembayaran Pending</h5>
+            <p>Anda memiliki <strong><?= $pendingPayments ?></strong> pembayaran yang sedang menunggu verifikasi. <a href="/member/payments">Lihat detail</a></p>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <div class="row">
     <div class="col-12">
         <div class="card card-primary card-outline">

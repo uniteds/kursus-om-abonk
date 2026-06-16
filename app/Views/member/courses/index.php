@@ -46,6 +46,13 @@
                         <p class="card-text text-muted" style="font-size:0.9rem;">
                             <?= esc(mb_strimwidth($course->description ?? '', 0, 100, '...')) ?>
                         </p>
+                        <p class="mb-0">
+                            <?php if ($course->price > 0): ?>
+                                <span class="text-primary font-weight-bold">Rp <?= number_format($course->price, 0, ',', '.') ?></span>
+                            <?php else: ?>
+                                <span class="badge badge-success">Gratis</span>
+                            <?php endif; ?>
+                        </p>
                     </div>
                     <div class="card-footer bg-white">
                         <a href="/member/courses/view/<?= $course->id ?>" class="btn btn-primary btn-block"><i class="fas fa-info-circle"></i> Lihat Detail</a>

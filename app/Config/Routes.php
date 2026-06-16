@@ -27,6 +27,9 @@ $routes->group('', ['filter' => 'guest'], function ($routes) {
 $routes->get('verify-email/(:any)', 'Auth\AuthController::verifyEmail/$1');
 $routes->get('reset-password/(:any)', 'Auth\AuthController::resetPassword/$1');
 
+// DOKU Notification (public endpoint, no auth)
+$routes->post('doku/notification', 'DokuController::notification');
+
 // Logout
 $routes->get('/logout', 'Auth\AuthController::logout');
 
@@ -94,6 +97,12 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->get('enrollments/approve/(:num)', 'Admin\Enrollments::approve/$1');
     $routes->get('enrollments/reject/(:num)', 'Admin\Enrollments::reject/$1');
 
+    // Payments
+    $routes->get('payments', 'Admin\Payments::index');
+    $routes->get('payments/view/(:num)', 'Admin\Payments::view/$1');
+    $routes->post('payments/approve/(:num)', 'Admin\Payments::approve/$1');
+    $routes->post('payments/reject/(:num)', 'Admin\Payments::reject/$1');
+
     // Announcements
     $routes->get('announcements', 'Admin\Announcements::index');
     $routes->get('announcements/create', 'Admin\Announcements::create');
@@ -121,6 +130,16 @@ $routes->group('member', ['filter' => 'member'], function ($routes) {
     $routes->get('my-courses', 'Member\MyCourses::index');
     $routes->get('class/(:num)', 'Member\ClassDetail::index/$1');
     $routes->get('class-materials/download/(:num)/(:num)', 'Member\ClassMaterialDownload::index/$1/$2');
+
+    // Payments
+    $routes->get('payments', 'Member\Payments::index');
+    $routes->get('payments/create/(:num)', 'Member\Payments::create/$1');
+    $routes->post('payments/store', 'Member\Payments::store');
+    $routes->get('payments/view/(:num)', 'Member\Payments::view/$1');
+    $routes->get('payments/pay/(:num)', 'Member\Payments::pay/$1');
+    $routes->get('payments/status/(:num)', 'Member\Payments::status/$1');
+    $routes->get('payments/callback', 'Member\Payments::callback');
+
     $routes->get('profile', 'Member\Profile::index');
     $routes->post('profile/update', 'Member\Profile::update');
 });

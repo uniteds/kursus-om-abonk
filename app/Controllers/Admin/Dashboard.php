@@ -9,6 +9,7 @@ use App\Models\ClassModel;
 use App\Models\EnrollmentModel;
 use App\Models\ContentModel;
 use App\Models\VisitorLogModel;
+use App\Models\PaymentModel;
 
 class Dashboard extends BaseController
 {
@@ -20,6 +21,7 @@ class Dashboard extends BaseController
         $enrollmentModel = new EnrollmentModel();
         $contentModel = new ContentModel();
         $visitorModel = new VisitorLogModel();
+        $paymentModel = new PaymentModel();
 
         $data = [
             'title'            => 'Dashboard Admin',
@@ -31,6 +33,8 @@ class Dashboard extends BaseController
             'pendingEnrollments' => $enrollmentModel->countByStatus('pending'),
             'approvedEnrollments' => $enrollmentModel->countByStatus('approved'),
             'totalContent'     => $contentModel->countAllResults(),
+            'pendingPayments'  => $paymentModel->countByStatus('pending'),
+            'approvedPayments' => $paymentModel->countByStatus('approved'),
             'settings'         => $this->getAllSettings(),
             // Visitor stats
             'visitorsToday'      => $visitorModel->countToday(),

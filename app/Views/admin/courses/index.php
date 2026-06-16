@@ -27,13 +27,14 @@
                         <th>Thumbnail</th>
                         <th>Judul</th>
                         <th>Kategori</th>
+                        <th width="120">Harga</th>
                         <th width="80">Status</th>
                         <th width="150">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($courses)): ?>
-                        <tr><td colspan="6" class="text-center">Tidak ada data.</td></tr>
+                        <tr><td colspan="7" class="text-center">Tidak ada data.</td></tr>
                     <?php else: ?>
                         <?php $i = ($pager->getCurrentPage() - 1) * 10 + 1; ?>
                         <?php foreach ($courses as $course): ?>
@@ -48,6 +49,7 @@
                                 </td>
                                 <td><?= esc($course->title) ?></td>
                                 <td><span class="badge badge-primary"><?= esc($course->category_name ?? '-') ?></span></td>
+                                <td><?= $course->price > 0 ? 'Rp ' . number_format($course->price, 0, ',', '.') : '<span class="badge badge-success">Gratis</span>' ?></td>
                                 <td><?= $course->is_active ? '<span class="badge badge-success">Aktif</span>' : '<span class="badge badge-secondary">Nonaktif</span>' ?></td>
                                 <td>
                                     <a href="/admin/courses/edit/<?= $course->id ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>

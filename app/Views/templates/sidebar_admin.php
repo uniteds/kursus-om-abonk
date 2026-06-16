@@ -41,6 +41,12 @@
     </a>
 </li>
 <li class="nav-item">
+    <a href="/admin/payments" class="nav-link <?= strpos(uri_string(), 'admin/payments') !== false ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-money-bill-wave"></i>
+        <p>Pembayaran</p>
+    </a>
+</li>
+<li class="nav-item">
     <a href="/admin/announcements" class="nav-link <?= strpos(uri_string(), 'admin/announcements') !== false ? 'active' : '' ?>">
         <i class="nav-icon fas fa-bullhorn"></i>
         <p>Pengumuman</p>

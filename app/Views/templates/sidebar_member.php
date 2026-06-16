@@ -16,6 +16,12 @@
         <p>Kursus Saya</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="/member/payments" class="nav-link <?= strpos(uri_string(), 'member/payments') !== false ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-money-bill-wave"></i>
+        <p>Pembayaran</p>
+    </a>
+</li>
 <li class="nav-header">AKUN</li>
 <li class="nav-item">
     <a href="/member/profile" class="nav-link <?= strpos(uri_string(), 'member/profile') !== false ? 'active' : '' ?>">

@@ -14,7 +14,7 @@ class CourseModel extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
 
-    protected $allowedFields = ['category_id', 'title', 'slug', 'description', 'thumbnail', 'is_active', 'meetings_count', 'meeting_duration', 'curriculum'];
+    protected $allowedFields = ['category_id', 'title', 'slug', 'description', 'thumbnail', 'is_active', 'meetings_count', 'meeting_duration', 'curriculum', 'price'];
 
     protected $validationRules = [
         'title'       => 'required|min_length[3]|max_length[200]',

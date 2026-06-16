@@ -59,6 +59,29 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <div class="small-box" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;">
+            <div class="inner">
+                <h3><?= $pendingPayments ?></h3>
+                <p>Pembayaran Pending</p>
+            </div>
+            <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
+            <a href="/admin/payments?status=pending" class="small-box-footer" style="color:rgba(255,255,255,.8);">Lihat detail <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;">
+            <div class="inner">
+                <h3><?= $approvedPayments ?></h3>
+                <p>Pembayaran Disetujui</p>
+            </div>
+            <div class="icon"><i class="fas fa-check-circle"></i></div>
+            <a href="/admin/payments?status=approved" class="small-box-footer" style="color:rgba(255,255,255,.8);">Lihat detail <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+
 <!-- Visitor Stats -->
 <div class="row">
     <div class="col-lg-3 col-6">
