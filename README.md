@@ -1,6 +1,6 @@
 # Om Abonk - Learning Management System
 
-Platform kursus IT berbasis web untuk pemula hingga mahir. Dibangun dengan CodeIgniter 4, Docker, AdminLTE 3, dan integrasi pembayaran DOKU.
+Platform kursus IT berbasis web untuk pemula hingga mahir. Dibangun dengan CodeIgniter 4, Docker, AdminLTE 3, integrasi pembayaran DOKU, dan sertifikat otomatis.
 
 **Live:** https://ayodaftar.web.id
 
@@ -11,7 +11,9 @@ Platform kursus IT berbasis web untuk pemula hingga mahir. Dibangun dengan CodeI
 - CRUD Users, Kategori, Kursus, Kelas, Konten, Pengumuman
 - Approve / Reject enrollment peserta
 - Approve / Reject pembayaran manual
+- **Mark Complete** — tandai siswa selesai kursus (untuk terbitkan sertifikat)
 - Pengaturan site (nama, deskripsi, tagline, logo, footer)
+- **Pengaturan Sertifikat** — logo, penandatangan, warna, judul
 - Upload thumbnail kursus & avatar profile
 
 ### Member (Siswa)
@@ -20,9 +22,19 @@ Platform kursus IT berbasis web untuk pemula hingga mahir. Dibangun dengan CodeI
 - Upload bukti bayar untuk kursus manual
 - Daftar / enroll rombongan belajar gratis
 - Akses materi setelah enrollment disetujui
-- Lihat konten per kelas (video, document, link)
+- Lihat konten per kelas (video, document, link, slide, tugas)
 - Riwayat pembayaran & status transaksi
-- Profil & update avatar
+- **Profil lengkap** — nama, email, WhatsApp, alamat, tanggal lahir, bio, avatar
+- **Sertifikat** — download PDF sertifikat setelah kursus selesai
+
+### Sertifikat
+- PDF sertifikat landscape A4 dengan desain profesional
+- **Logo** — kustomisasi logo sertifikat dari admin
+- **Penandatangan** — nama & jabatan penandatangan
+- **QR Code** — scan untuk validasi keaslian sertifikat
+- **Halaman Validasi** — `/certificate/validate/{nomor}` (publik)
+- Auto-numbered: `CERT-YYYYMMDD-XXXX`
+- Kalkulasi jam pelajaran otomatis (1 jam pelajaran = 45 menit)
 
 ### Pembayaran
 - **DOKU Checkout** — integrasi popup pembayaran online (VA, QRIS, kartu kredit, GoPay, OVO, Dana, dll)
@@ -30,6 +42,7 @@ Platform kursus IT berbasis web untuk pemula hingga mahir. Dibangun dengan CodeI
 - Auto-enrollment setelah pembayaran berhasil
 - Auto-refresh status pembayaran
 - Callback URL untuk notifikasi dari DOKU
+- Replay payment dengan invoice number baru (anti-expired)
 
 ### Landing Page
 - Hero section dengan statistik dinamis
@@ -55,19 +68,23 @@ Platform kursus IT berbasis web untuk pemula hingga mahir. Dibangun dengan CodeI
 | Container | Docker Compose |
 | Email | Gmail SMTP (App Password) |
 | Pembayaran | DOKU Checkout (Popup JS) |
+| PDF | Dompdf 3.x |
+| QR Code | chillerlan/php-qrcode 6.x |
 
 ## Struktur Database
 
 ```
-users              → akun admin & member
-categories         → kategori kursus
-courses            → kursus (judul, deskripsi, kurikulum, thumbnail, harga)
-classes            → rombongan belajar per kursus
-enrollments        → pendaftaran siswa ke kelas
-content            → materi per kelas (video/document/link)
-announcements      → pengumuman per kelas
-site_settings      → pengaturan site (key-value)
-payments           → riwayat pembayaran (DOKU & manual)
+users                 → akun admin & member (nama, email, whatsapp, bio, alamat, tgl lahir, avatar)
+categories            → kategori kursus
+courses               → kursus (judul, deskripsi, kurikulum, thumbnail, harga, meetings_count, meeting_duration)
+classes               → rombongan belajar per kursus
+enrollments           → pendaftaran siswa ke kelas (pending/approved/rejected/completed)
+content               → materi per kelas (video/document/link/slide/tugas)
+announcements         → pengumuman per kelas
+site_settings         → pengaturan site (key-value)
+payments              → riwayat pembayaran (DOKU & manual)
+certificates          → sertifikat peserta (nomor, nama, kursus, durasi, tanggal)
+certificate_settings  → pengaturan sertifikat (logo, penandatangan, warna)
 ```
 
 ## Instalasi
@@ -163,6 +180,26 @@ DOKU_ENV = production
 3. Admin review → Approve / Reject
 4. Jika approve → enrollment aktif
 
+## Sertifikat
+
+### Konfigurasi
+1. Login admin → **Pengaturan → Sertifikat**
+2. Upload logo (PNG/JPG/SVG, background transparan)
+3. Isi nama & jabatan penandatangan
+4. Atur warna border & aksen
+5. Simpan
+
+### Flow Sertifikat
+1. Admin klik tombol "Selesai" (flag-checkered) di tab Siswa pada detail kelas
+2. Enrollment status berubah ke `completed`
+3. Member klik tombol "Sertifikat" di halaman Kursus Saya
+4. PDF otomatis di-generate & didownload
+
+### Validasi Sertifikat
+- Setiap sertifikat memiliki QR Code yang mengarah ke halaman validasi
+- URL: `https://yourdomain.com/certificate/validate/CERT-XXXXXXXX-XXXX`
+- Halaman validasi menampilkan status: **Valid** atau **Tidak Ditemukan**
+
 ## Deployment ke Production
 
 1. Set `CI_ENVIRONMENT = production` di `.env`
@@ -171,6 +208,7 @@ DOKU_ENV = production
 4. Jalankan migration di server production
 5. Buat admin pertama melalui seeder atau database manual
 6. Set DOKU notification URL ke domain production
+7. Konfigurasi sertifikat (logo, penandatangan) di admin
 
 ## Urutan Migrate
 
@@ -193,6 +231,10 @@ DOKU_ENV = production
 | 000015 | Tambah kolom `target_role` ke `announcements` |
 | 000016 | Tabel `payments` (final schema) |
 | 000017 | Tambah kolom DOKU ke `payments` (`invoice_number`, `doku_session_id`, `doku_token_id`, `doku_payment_url`, `payment_channel`, `external_id`) |
+| 000018 | Tambah kolom `whatsapp`, `bio`, `address`, `date_of_birth` ke `users` |
+| 000019 | Tabel `certificates` (sertifikat peserta) |
+| 000020 | Tabel `certificate_settings` (pengaturan sertifikat) |
+| 000021 | Tambah kolom `logo` ke `certificate_settings` |
 
 ## License
 
