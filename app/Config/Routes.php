@@ -28,8 +28,9 @@ $routes->group('', ['filter' => 'guest'], function ($routes) {
 $routes->get('verify-email/(:any)', 'Auth\AuthController::verifyEmail/$1');
 $routes->get('reset-password/(:any)', 'Auth\AuthController::resetPassword/$1');
 
-// DOKU Notification (public endpoint, no auth)
+// DOKU Notification & Callback (public endpoints, no auth)
 $routes->post('doku/notification', 'DokuController::notification');
+$routes->get('doku/callback', 'Member\Payments::callback');
 
 // Logout
 $routes->get('/logout', 'Auth\AuthController::logout');

@@ -91,17 +91,10 @@
                     <h3 class="card-title"><i class="fas fa-credit-card mr-1"></i> Bayar Sekarang</h3>
                 </div>
                 <div class="card-body">
-                    <?php if (!empty($payment->doku_payment_url)): ?>
-                        <button id="pay-button" class="btn btn-primary btn-block">
-                            <i class="fas fa-lock mr-1"></i> Bayar via DOKU
-                        </button>
-                        <small class="text-muted d-block mt-2 text-center">Halaman pembayaran akan muncul sebagai popup</small>
-                    <?php else: ?>
-                        <a href="/member/payments/pay/<?= $payment->id ?>" class="btn btn-primary btn-block">
-                            <i class="fas fa-credit-card mr-1"></i> Buat Link Pembayaran
-                        </a>
-                        <small class="text-muted d-block mt-2 text-center">Klik untuk membuat link pembayaran DOKU</small>
-                    <?php endif; ?>
+                    <a href="/member/payments/pay/<?= $payment->id ?>" class="btn btn-primary btn-block">
+                        <i class="fas fa-credit-card mr-1"></i> Bayar via DOKU
+                    </a>
+                    <small class="text-muted d-block mt-2 text-center">Klik untuk membuat link pembayaran baru</small>
                 </div>
             </div>
         <?php endif; ?>
@@ -136,12 +129,8 @@
     </div>
 </div>
 
-<?php if ($payment->status === 'pending' && !empty($payment->doku_payment_url)): ?>
+<?php if ($payment->status === 'pending'): ?>
 <script>
-document.getElementById('pay-button').addEventListener('click', function() {
-    loadJokulCheckout('<?= esc($payment->doku_payment_url) ?>');
-});
-
 setInterval(function() {
     fetch('/member/payments/status/<?= $payment->id ?>')
         .then(r => r.json())

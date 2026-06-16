@@ -216,15 +216,6 @@ class Payments extends BaseController
             return redirect()->to('/member/payments/view/' . $id)->with('error', 'Pembayaran ini sudah diproses.');
         }
 
-        if (!empty($payment->doku_payment_url)) {
-            return view('member/payments/checkout', [
-                'title'      => 'Pembayaran DOKU',
-                'payment'    => $payment,
-                'paymentUrl' => $payment->doku_payment_url,
-                'settings'   => $this->getAllSettings(),
-            ]);
-        }
-
         $classModel = new ClassModel();
         $class = $classModel->select('classes.*, courses.title as course_title, courses.price as course_price')
             ->join('courses', 'courses.id = classes.course_id', 'left')
@@ -237,10 +228,19 @@ class Payments extends BaseController
         }
 
         $baseUrl = base_url();
+        $newInvoiceNumber = $doku->generateInvoiceNumber('OMA');
+
+        $paymentModel->update($id, [
+            'invoice_number' => $newInvoiceNumber,
+            'doku_session_id'  => null,
+            'doku_token_id'    => null,
+            'doku_payment_url' => null,
+        ]);
+
         $orderData = [
             'order' => [
                 'amount'          => (int) $payment->amount,
-                'invoice_number'  => $payment->invoice_number,
+                'invoice_number'  => $newInvoiceNumber,
                 'currency'        => 'IDR',
                 'callback_url'    => $baseUrl . '/doku/callback',
                 'auto_redirect'   => true,
