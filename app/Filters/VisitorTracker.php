@@ -10,19 +10,16 @@ class VisitorTracker implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        // Do nothing before
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        // Only log GET requests (page views, not AJAX/API calls)
         if ($request->getMethod() !== 'GET') {
             return;
         }
 
         $uri = $request->getUri()->getPath();
 
-        // Skip static assets, API calls, and non-page URLs
         $skipPatterns = [
             'favicon', 'robots.txt', 'sitemap.xml', 'og-default',
             'assets/', 'css/', 'js/', 'images/', '.svg', '.png',
@@ -37,13 +34,19 @@ class VisitorTracker implements FilterInterface
         }
 
         try {
+            $session = session();
+            $ip = $request->getIPAddress();
+            $today = date('Y-m-d');
+            $userId = $session->get('user_id');
+            $lastLogKey = 'last_visitor_log';
+
+            $lastLog = $session->get($lastLogKey);
+            if ($lastLog && (time() - $lastLog) < 1800) {
+                return;
+            }
+
             $model = new \App\Models\VisitorLogModel();
 
-            $ip       = $request->getIPAddress();
-            $today    = date('Y-m-d');
-            $userId   = session()->get('user_id');
-
-            // Check if this is a unique visit today from this IP
             $existingToday = $model->where('ip_address', $ip)
                                    ->where('DATE(created_at)', $today)
                                    ->countAllResults();
@@ -58,8 +61,9 @@ class VisitorTracker implements FilterInterface
                 'is_unique'   => $existingToday === 0 ? 1 : 0,
                 'created_at'  => date('Y-m-d H:i:s'),
             ]);
+
+            $session->set($lastLogKey, time());
         } catch (\Throwable $e) {
-            // Silently fail — visitor logging should never break the app
         }
     }
 }
