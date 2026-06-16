@@ -74,6 +74,13 @@ class ClassDetail extends BaseController
         return redirect()->to("/admin/classes/view/{$classId}?tab=siswa")->with('success', 'Persetujuan berhasil.');
     }
 
+    public function completeEnrollment($classId, $enrollmentId)
+    {
+        $model = new EnrollmentModel();
+        $model->update($enrollmentId, ['status' => 'completed']);
+        return redirect()->to("/admin/classes/view/{$classId}?tab=siswa")->with('success', 'Siswa dinyatakan selesai.');
+    }
+
     public function rejectEnrollment($classId, $enrollmentId)
     {
         $model = new EnrollmentModel();

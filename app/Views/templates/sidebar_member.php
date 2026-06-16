@@ -22,6 +22,12 @@
         <p>Pembayaran</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="/member/certificate" class="nav-link <?= strpos(uri_string(), 'member/certificate') !== false ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-certificate"></i>
+        <p>Sertifikat</p>
+    </a>
+</li>
 <li class="nav-header">AKUN</li>
 <li class="nav-item">
     <a href="/member/profile" class="nav-link <?= strpos(uri_string(), 'member/profile') !== false ? 'active' : '' ?>">

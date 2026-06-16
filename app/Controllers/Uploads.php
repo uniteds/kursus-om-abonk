@@ -8,8 +8,9 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 class Uploads extends Controller
 {
     private const PUBLIC_DIRECTORIES = [
-        'thumbnails' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
-        'avatars'    => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
+        'thumbnails'   => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
+        'avatars'      => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
+        'certificates' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
     ];
 
     private const MIME_TYPES = [

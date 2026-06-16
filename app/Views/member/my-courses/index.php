@@ -43,6 +43,9 @@
                                 <td>
                                     <?php if ($e->status === 'approved'): ?>
                                         <a href="/member/class/<?= $e->class_id ?>" class="btn btn-primary btn-sm"><i class="fas fa-door-open"></i> Masuk</a>
+                                    <?php elseif ($e->status === 'completed'): ?>
+                                        <a href="/member/class/<?= $e->class_id ?>" class="btn btn-secondary btn-sm"><i class="fas fa-door-open"></i> Masuk</a>
+                                        <a href="/member/certificate/generate/<?= $e->id ?>" class="btn btn-success btn-sm"><i class="fas fa-certificate"></i> Sertifikat</a>
                                     <?php else: ?>
                                         <span class="text-muted">Menunggu...</span>
                                     <?php endif; ?>

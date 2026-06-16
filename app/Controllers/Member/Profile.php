@@ -39,11 +39,21 @@ class Profile extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
         }
 
+        $whatsapp = $this->request->getPost('whatsapp');
+        $whatsapp = preg_replace('/[^0-9]/', '', $whatsapp);
+        if (!empty($whatsapp) && substr($whatsapp, 0, 1) === '0') {
+            $whatsapp = '62' . substr($whatsapp, 1);
+        }
+
         $data = [
-            'id'    => $userId,
-            'name'  => $this->request->getPost('name'),
-            'email' => $email,
-            'phone' => $this->request->getPost('phone'),
+            'id'             => $userId,
+            'name'           => $this->request->getPost('name'),
+            'email'          => $email,
+            'phone'          => $this->request->getPost('phone'),
+            'whatsapp'       => $whatsapp ?: null,
+            'bio'            => $this->request->getPost('bio'),
+            'address'        => $this->request->getPost('address'),
+            'date_of_birth'  => $this->request->getPost('date_of_birth') ?: null,
         ];
 
         $password = $this->request->getPost('password');
@@ -53,9 +63,17 @@ class Profile extends BaseController
 
         $file = $this->request->getFile('avatar');
         if ($file && $file->isValid() && !$file->hasMoved()) {
+            $oldAvatar = $model->find($userId)->avatar ?? null;
             $newName = $file->getRandomName();
             $file->move(WRITEPATH . 'uploads/avatars', $newName);
             $data['avatar'] = $newName;
+
+            if ($oldAvatar) {
+                $oldPath = WRITEPATH . 'uploads/avatars/' . $oldAvatar;
+                if (is_file($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
         }
 
         $model->save($data);

@@ -60,6 +60,12 @@
     </a>
 </li>
 <li class="nav-item">
+    <a href="/admin/certificate-settings" class="nav-link <?= strpos(uri_string(), 'admin/certificate-settings') !== false ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-certificate"></i>
+        <p>Sertifikat</p>
+    </a>
+</li>
+<li class="nav-item">
     <a href="/admin/profile" class="nav-link <?= strpos(uri_string(), 'admin/profile') !== false ? 'active' : '' ?>">
         <i class="nav-icon fas fa-user-circle"></i>
         <p>Profil</p>

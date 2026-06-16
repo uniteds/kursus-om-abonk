@@ -276,9 +276,12 @@ $colorLabel = $statusLabels[$class->status] ?? ucfirst($class->status);
                                             <a href="/admin/classes/approve-enrollment/<?= $class->id ?>/<?= $e->id ?>" class="btn btn-success btn-sm" title="Setujui"><i class="fas fa-check"></i></a>
                                             <a href="/admin/classes/reject-enrollment/<?= $class->id ?>/<?= $e->id ?>" class="btn btn-danger btn-sm" title="Tolak"><i class="fas fa-times"></i></a>
                                         <?php elseif ($e->status === 'approved'): ?>
+                                            <a href="/admin/classes/complete-enrollment/<?= $class->id ?>/<?= $e->id ?>" class="btn btn-info btn-sm" title="Selesai" onclick="return confirm('Tandai siswa ini sebagai selesai?')"><i class="fas fa-flag-checkered"></i></a>
                                             <a href="/admin/classes/reject-enrollment/<?= $class->id ?>/<?= $e->id ?>" class="btn btn-warning btn-sm" title="Batalkan"><i class="fas fa-ban"></i></a>
                                         <?php elseif ($e->status === 'rejected'): ?>
                                             <a href="/admin/classes/approve-enrollment/<?= $class->id ?>/<?= $e->id ?>" class="btn btn-success btn-sm" title="Setujui"><i class="fas fa-check"></i></a>
+                                        <?php elseif ($e->status === 'completed'): ?>
+                                            <span class="badge badge-info"><i class="fas fa-flag-checkered"></i> Selesai</span>
                                         <?php else: ?>
                                             <span class="text-muted">-</span>
                                         <?php endif; ?>

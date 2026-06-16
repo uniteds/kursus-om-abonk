@@ -11,6 +11,7 @@ $routes->get('course/(:any)', 'Landing\\CourseDetail::index/$1');
 $routes->get('artikel', 'Landing\\Articles::index');
 $routes->get('artikel/(:any)', 'Landing\\ArticleDetail::index/$1');
 $routes->get('sitemap.xml', 'Sitemap::index');
+$routes->get('certificate/validate/(:any)', 'CertificateValidate::index/$1');
 
 // Guest Routes (redirect if logged in)
 $routes->group('', ['filter' => 'guest'], function ($routes) {
@@ -72,6 +73,7 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->post('classes/update/(:num)', 'Admin\Classes::update/$1');
     $routes->get('classes/delete/(:num)', 'Admin\Classes::delete/$1');
     $routes->get('classes/approve-enrollment/(:num)/(:num)', 'Admin\ClassDetail::approveEnrollment/$1/$2');
+    $routes->get('classes/complete-enrollment/(:num)/(:num)', 'Admin\ClassDetail::completeEnrollment/$1/$2');
     $routes->get('classes/reject-enrollment/(:num)/(:num)', 'Admin\ClassDetail::rejectEnrollment/$1/$2');
     $routes->get('classes/delete-content/(:num)/(:num)', 'Admin\ClassDetail::deleteContent/$1/$2');
 
@@ -115,6 +117,10 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->get('settings', 'Admin\Settings::index');
     $routes->post('settings/update', 'Admin\Settings::update');
 
+    // Certificate Settings
+    $routes->get('certificate-settings', 'Admin\CertificateSettings::index');
+    $routes->post('certificate-settings/update', 'Admin\CertificateSettings::update');
+
     // Profile
     $routes->get('profile', 'Admin\Profile::index');
     $routes->post('profile/update', 'Admin\Profile::update');
@@ -142,4 +148,9 @@ $routes->group('member', ['filter' => 'member'], function ($routes) {
 
     $routes->get('profile', 'Member\Profile::index');
     $routes->post('profile/update', 'Member\Profile::update');
+
+    // Certificates
+    $routes->get('certificate', 'Member\Certificate::index');
+    $routes->get('certificate/generate/(:num)', 'Member\Certificate::generate/$1');
+    $routes->get('certificate/download/(:num)', 'Member\Certificate::download/$1');
 });
