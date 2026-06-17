@@ -54,6 +54,7 @@ Platform kursus IT berbasis web untuk pemula hingga mahir. Dibangun dengan CodeI
 - Register dengan email verification (Gmail SMTP)
 - Forgot password → reset password via email
 - Admin bisa login tanpa verifikasi email
+- **Login dengan Google** — OAuth2, auto register jika email belum terdaftar
 
 ## Tech Stack
 
@@ -67,6 +68,7 @@ Platform kursus IT berbasis web untuk pemula hingga mahir. Dibangun dengan CodeI
 | Server | Nginx + PHP 8.2 FPM |
 | Container | Docker Compose |
 | Email | Gmail SMTP (App Password) |
+| OAuth2 | league/oauth2-client (Google Login) |
 | Pembayaran | DOKU Checkout (Popup JS) |
 | PDF | Dompdf 3.x |
 | QR Code | chillerlan/php-qrcode 6.x |
@@ -148,6 +150,29 @@ email.SMTPPass = xxxx-xxxx-xxxx-xxxx
 
 4. **Update `app/Config/Email.php`** (jika perlu mengubah `fromEmail`)
 
+## Konfigurasi Google OAuth (Login dengan Google)
+
+Untuk mengaktifkan login via Google:
+
+1. Buka [Google Cloud Console](https://console.cloud.google.com/)
+2. Buat project baru atau pilih project yang ada
+3. Aktifkan **Google+ API** dan **People API**
+4. Buka **APIs & Services → Credentials** → klik **Create Credentials → OAuth client ID**
+5. Pilih **Web application**, isi nama app
+6. Di **Authorized redirect URIs**, tambahkan:
+   ```
+   https://yourdomain.com/auth/google/callback
+   ```
+7. Copy **Client ID** dan **Client Secret**
+8. **Update `.env`:**
+   ```env
+   google.client_id = your-client-id.apps.googleusercontent.com
+   google.client_secret = your-client-secret
+   google.redirect_uri = https://yourdomain.com/auth/google/callback
+   ```
+
+> **Catatan:** Redirect URI di Google Cloud Console harus persis sama dengan yang di `.env` (termasuk `https://`, domain, port, dan path).
+
 ## Konfigurasi DOKU Payment Gateway
 
 Untuk mengaktifkan pembayaran online via DOKU:
@@ -209,6 +234,7 @@ DOKU_ENV = production
 5. Buat admin pertama melalui seeder atau database manual
 6. Set DOKU notification URL ke domain production
 7. Konfigurasi sertifikat (logo, penandatangan) di admin
+8. Konfigurasi Google OAuth (Client ID, Secret, Redirect URI) di `.env`
 
 ## Urutan Migrate
 
@@ -235,6 +261,7 @@ DOKU_ENV = production
 | 000019 | Tabel `certificates` (sertifikat peserta) |
 | 000020 | Tabel `certificate_settings` (pengaturan sertifikat) |
 | 000021 | Tambah kolom `logo` ke `certificate_settings` |
+| 000022 | Tambah kolom `google_id`, `avatar_url` ke `users` |
 
 ## License
 
