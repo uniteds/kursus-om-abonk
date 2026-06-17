@@ -63,6 +63,17 @@
                 </div>
             </form>
 
+            <div class="mt-3 mb-2">
+                <div class="row align-items-center mb-2">
+                    <div class="col"><hr></div>
+                    <div class="col-auto" style="font-size:.8rem; color:#999;">ATAU</div>
+                    <div class="col"><hr></div>
+                </div>
+                <a href="/auth/google" class="btn btn-block btn-danger" style="font-size:.9rem;">
+                    <i class="fab fa-google mr-1"></i> Login dengan Google
+                </a>
+            </div>
+
             <p class="mt-3 mb-1 text-center" style="font-size:.85rem;">
                 <a href="/forgot-password" style="color:#6366f1;"><i class="fas fa-key mr-1"></i> Lupa Password?</a>
             </p>

@@ -32,6 +32,10 @@ $routes->get('reset-password/(:any)', 'Auth\AuthController::resetPassword/$1');
 $routes->post('doku/notification', 'DokuController::notification');
 $routes->get('doku/callback', 'Member\Payments::callback');
 
+// Google OAuth
+$routes->get('auth/google', 'Auth\GoogleController::redirect');
+$routes->get('auth/google/callback', 'Auth\GoogleController::callback');
+
 // Logout
 $routes->get('/logout', 'Auth\AuthController::logout');
 

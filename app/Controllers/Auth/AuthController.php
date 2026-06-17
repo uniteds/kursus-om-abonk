@@ -27,6 +27,11 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Email atau password salah.')->withInput();
         }
 
+        // Jika user login via Google, minta login via Google
+        if ($user->google_id) {
+            return redirect()->back()->with('error', 'Akun ini terdaftar via Google. Silakan login dengan Google.')->withInput();
+        }
+
         if (!$user->is_active) {
             return redirect()->back()->with('error', 'Akun Anda tidak aktif.')->withInput();
         }

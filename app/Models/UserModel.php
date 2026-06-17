@@ -15,7 +15,7 @@ class UserModel extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
 
-    protected $allowedFields = ['name', 'email', 'password', 'role', 'avatar', 'phone', 'whatsapp', 'bio', 'address', 'date_of_birth', 'is_active', 'email_verified_at', 'reset_token', 'reset_expires'];
+    protected $allowedFields = ['name', 'email', 'password', 'role', 'avatar', 'google_id', 'avatar_url', 'phone', 'whatsapp', 'bio', 'address', 'date_of_birth', 'is_active', 'email_verified_at', 'reset_token', 'reset_expires'];
 
     protected $validationRules = [
         'name'     => 'required|min_length[3]|max_length[100]',
