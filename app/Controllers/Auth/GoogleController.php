@@ -34,7 +34,7 @@ class GoogleController extends BaseController
     public function redirect()
     {
         $authUrl = $this->getProvider()->getAuthorizationUrl([
-            'scope'      => ['openid', 'email', 'profile'],
+            'scope'      => 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
             'accessType' => 'offline',
         ]);
 
@@ -74,7 +74,7 @@ class GoogleController extends BaseController
 
             // Ambil data user dari Google
             $googleUser = $this->getProvider()->getResourceOwner($token);
-            $userInfo   = $googleUser->getArray();
+            $userInfo   = $googleUser->toArray();
 
             $googleId   = $userInfo['sub'] ?? '';
             $name       = $userInfo['name'] ?? '';
